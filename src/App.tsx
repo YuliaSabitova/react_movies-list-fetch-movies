@@ -10,9 +10,10 @@ const normalizeMovie = (rawMovie: MovieData): Movie => {
   return {
     imdbId: rawMovie.imdbID,
     title: rawMovie.Title,
-    imgUrl: rawMovie.Poster !== 'N/A'
-    ? rawMovie.Poster
-    : 'https://via.placeholder.com/360x270.png?text=no%20preview',
+    imgUrl:
+      rawMovie.Poster !== 'N/A'
+        ? rawMovie.Poster
+        : 'https://via.placeholder.com/360x270.png?text=no%20preview',
     description: rawMovie.Plot,
     imdbUrl: `https://www.imdb.com/title/${rawMovie.imdbID}`,
   };
@@ -35,32 +36,35 @@ export const App = () => {
     setPreview(null);
 
     try {
-      const response = await getMovie(title)
-        if('Error' in response) {
-          setError(response.Error);
-        } else {
-         const normalized = normalizeMovie(response);
+      const response = await getMovie(title);
+
+      if ('Error' in response) {
+        setError(response.Error);
+      } else {
+        const normalized = normalizeMovie(response);
         setPreview(normalized);
       }
-      } catch {
-         setError('Something went wrong');
-      } finally {
-        setLoading(false);
-  }
-};
+    }
+    catch {
+      setError('Something went wrong');
+    }
+    finally {
+      setLoading(false);
+    }
+  };
 
   const handleAdd = (movieToAdd: Movie) => {
     const isAlreadyAdded = movies.some(
-    (currentMovie) => currentMovie.imdbId === movieToAdd.imdbId
-  );
-  if(!isAlreadyAdded) {
-   setMovies(prev => [...prev, movieToAdd]);
+      currentMovie => currentMovie.imdbId === movieToAdd.imdbId,
+    );
+
+    if (!isAlreadyAdded) {
+      setMovies(prev => [...prev, movieToAdd]);
+    }
+
+    setPreview(null);
+    setTitle('');
   };
-
-
-setPreview(null);
-  setTitle('');
-};
 
   return (
     <div className="page">
@@ -70,17 +74,17 @@ setPreview(null);
 
       <div className="sidebar">
         <FindMovie
-        value={title}
-        onChange={(newValue) => {
-        setTitle(newValue);
-        setError(null);
-        }}
-        onSearch={handleSearch}
-        onAddMovie={handleAdd}
-        isLoading={loading}
-        error={error}
-        movie={preview}
-        hasPreview={!!preview}
+          value={title}
+          onChange={newValue => {
+            setTitle(newValue);
+            setError(null);
+          }}
+          onSearch={handleSearch}
+          onAddMovie={handleAdd}
+          isLoading={loading}
+          error={error}
+          movie={preview}
+          hasPreview={!!preview}
         />
       </div>
     </div>
